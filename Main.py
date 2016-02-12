@@ -49,7 +49,7 @@ def GameLoop(screen,fpsSet):
     foodRadius = Settings.getFoodRadius()
     SnakeSize = Settings.getSnakeSize()
     food = Food(screen,foodRadius)
-    Snake = Snake(screen,SnakeSize)
+    snake = Snake(screen,SnakeSize)
 
     # sets Snake starting velocity
     event,screen,Str = block(screen) # blocks before game starts
@@ -61,62 +61,62 @@ def GameLoop(screen,fpsSet):
         return 0 ## score
 
     elif Str == "keydown":
-        Snake.event(event,True)
-        while (Snake.getVelocity() == (0,0)):
+        snake.event(event,True)
+        while (snake.getVelocity() == (0,0)):
             event,screen,Str = block(screen)
-            Snake.event(event,True)
+            snake.event(event,True)
 
     elif Str == "resize":
         size = event.dict['size']
         Settings.setWindowSize(size)
         screen = pygame.display.set_mode(size,pygame.RESIZABLE| pygame.HWSURFACE|pygame.DOUBLEBUF)
         Settings.setSurface(screen)
-        Snake.set_surface(screen)
+        snake.set_surface(screen)
         food.set_surface(screen)
         food.redraw()
-        Snake.redraw()
+        snake.redraw()
         Settings.obsDraw(screen)
 
     while running:
-        Snake.move()
-        Snake.draw()
+        snake.move()
+        snake.draw()
 
         # while loop allows for food to always be drawn in a single loop
         while True:
             coords = food.foodCoords()
-            if not(coords in Snake.getBody()):
+            if not(coords in snake.getBody()):
                 if checkObstacle(coords, Settings.obsList):
                     food.draw()
                     break;
 
         ## use screen.get_width and .get_height methods in case you need to resize
 
-        running = checkObstacle(Snake.getPos(),Settings.obsList) ## check if Snake hit any obstacle
+        running = checkObstacle(snake.getPos(),Settings.obsList) ## check if Snake hit any obstacle
 
 
-        if Snake.checkInvalidMove():
+        if snake.checkInvalidMove():
             running = False
 
         if Settings.getCollision():
-            Snake.checkBoundaries()
-            if Snake.getCrashState():
+            snake.checkBoundaries()
+            if snake.getCrashState():
                 running = False
         else:
-            x,y = Snake.checkBoundaries()
-            if Snake.getCrashState():
-                SnakeX,SnakeY = Snake.getPos()
-                if SnakeX > screen.get_width():
-                    Snake.x = 0
-                elif SnakeX < 0:
-                    Snake.x = screen.get_width()
-                elif SnakeY < 0:
-                    Snake.y = screen.get_height()
-                elif SnakeY > screen.get_height():
-                    Snake.y = 0
+            x,y = snake.checkBoundaries()
+            if snake.getCrashState():
+                snakeX,snakeY = snake.getPos()
+                if snakeX > screen.get_width():
+                    snake.x = 0
+                elif snakeX < 0:
+                    snake.x = screen.get_width()
+                elif snakeY < 0:
+                    snake.y = screen.get_height()
+                elif snakeY > screen.get_height():
+                    snake.y = 0
 
-        if food.check(Snake.x, Snake.y):
+        if food.check(snake.x, snake.y):
             score += 1
-            Snake.eat()
+            snake.eat()
             ##chomp.play() ## music
             food.erase()
 
@@ -127,18 +127,18 @@ def GameLoop(screen,fpsSet):
         elif Str == "quit":
             exit()
         elif Str == "keydown":
-            Snake.event(event,True)
+            snake.event(event,True)
         elif Str == "mouse":
-            Snake.event(event,False)
+            snake.event(event,False)
         elif Str == "resize":
             size = event.dict['size']
             Settings.setWindowSize(size)
             screen = pygame.display.set_mode(size,pygame.RESIZABLE| pygame.HWSURFACE|pygame.DOUBLEBUF)
             Settings.setSurface(screen)
-            Snake.set_surface(screen)
+            snake.set_surface(screen)
             food.set_surface(screen)
             food.redraw()
-            Snake.redraw()
+            snake.redraw()
             Settings.obsDraw(screen)
 
         pygame.display.update()

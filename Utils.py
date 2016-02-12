@@ -47,7 +47,7 @@ def Menu(backgroundSurface, bestScore,score):
     msgSurface(bestScore, textSize, white, black, red, -100, 200,backgroundSurface)
     msgSurface(scoreDisplay, textSize, white,black, red, -100, 100,backgroundSurface)
     msgSurface("Start? Press key ", textSize, white, black,red, 100,0,backgroundSurface)
-    msgSurface("Worm", textSize, white,black,red,0,0,backgroundSurface)
+    msgSurface("Snake", textSize, white,black,red,0,0,backgroundSurface)
     tmpSurface, surfaceCoords = msgSurface("Settings", textSize, red,black, black, 50, 50,backgroundSurface)
     dictt["init"] = [tmpSurface,surfaceCoords]
     return dictt
@@ -132,7 +132,7 @@ def block(screen): #decoupled block function
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 return (event,screen,"mouse")
             elif event.type == pygame.USEREVENT:
-                # event sent by music in Worm game
+                # event sent by music in Snake game
                 playSong("REBECCA.mp3")
 
 
