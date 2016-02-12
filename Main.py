@@ -1,7 +1,7 @@
-# Worm Game
+# Snake Game
 
 from Food import *
-from Worm import *
+from Snake import *
 from Obstacle import *
 from Settings import *
 from Utils import *
@@ -41,17 +41,17 @@ def GameLoop(screen,fpsSet):
     ## returns score
     ## screen size
     score = 0
-    # sets worm and food size in constructor to be able to change it in Settings
+    # sets Snake and food size in constructor to be able to change it in Settings
     running = True # game running flag
     Settings.obsList += generateObstacles(Settings.numberObs, screen) ## Settings class keeps obstacle number
     Settings.obsDraw(screen)
     pygame.display.update()
     foodRadius = Settings.getFoodRadius()
-    wormSize = Settings.getWormSize()
+    SnakeSize = Settings.getSnakeSize()
     food = Food(screen,foodRadius)
-    worm = Worm(screen,wormSize)
+    Snake = Snake(screen,SnakeSize)
 
-    # sets worm starting velocity
+    # sets Snake starting velocity
     event,screen,Str = block(screen) # blocks before game starts
 
     if Str == "quit":
@@ -61,62 +61,62 @@ def GameLoop(screen,fpsSet):
         return 0 ## score
 
     elif Str == "keydown":
-        worm.event(event,True)
-        while (worm.getVelocity() == (0,0)):
+        Snake.event(event,True)
+        while (Snake.getVelocity() == (0,0)):
             event,screen,Str = block(screen)
-            worm.event(event,True)
+            Snake.event(event,True)
 
     elif Str == "resize":
         size = event.dict['size']
         Settings.setWindowSize(size)
         screen = pygame.display.set_mode(size,pygame.RESIZABLE| pygame.HWSURFACE|pygame.DOUBLEBUF)
         Settings.setSurface(screen)
-        worm.set_surface(screen)
+        Snake.set_surface(screen)
         food.set_surface(screen)
         food.redraw()
-        worm.redraw()
+        Snake.redraw()
         Settings.obsDraw(screen)
 
     while running:
-        worm.move()
-        worm.draw()
+        Snake.move()
+        Snake.draw()
 
         # while loop allows for food to always be drawn in a single loop
         while True:
             coords = food.foodCoords()
-            if not(coords in worm.getBody()):
+            if not(coords in Snake.getBody()):
                 if checkObstacle(coords, Settings.obsList):
                     food.draw()
                     break;
 
         ## use screen.get_width and .get_height methods in case you need to resize
 
-        running = checkObstacle(worm.getPos(),Settings.obsList) ## check if worm hit any obstacle
+        running = checkObstacle(Snake.getPos(),Settings.obsList) ## check if Snake hit any obstacle
 
 
-        if worm.checkInvalidMove():
+        if Snake.checkInvalidMove():
             running = False
 
         if Settings.getCollision():
-            worm.checkBoundaries()
-            if worm.getCrashState():
+            Snake.checkBoundaries()
+            if Snake.getCrashState():
                 running = False
         else:
-            x,y = worm.checkBoundaries()
-            if worm.getCrashState():
-                wormX,wormY = worm.getPos()
-                if wormX > screen.get_width():
-                    worm.x = 0
-                elif wormX < 0:
-                    worm.x = screen.get_width()
-                elif wormY < 0:
-                    worm.y = screen.get_height()
-                elif wormY > screen.get_height():
-                    worm.y = 0
+            x,y = Snake.checkBoundaries()
+            if Snake.getCrashState():
+                SnakeX,SnakeY = Snake.getPos()
+                if SnakeX > screen.get_width():
+                    Snake.x = 0
+                elif SnakeX < 0:
+                    Snake.x = screen.get_width()
+                elif SnakeY < 0:
+                    Snake.y = screen.get_height()
+                elif SnakeY > screen.get_height():
+                    Snake.y = 0
 
-        if food.check(worm.x, worm.y):
+        if food.check(Snake.x, Snake.y):
             score += 1
-            worm.eat()
+            Snake.eat()
             ##chomp.play() ## music
             food.erase()
 
@@ -127,18 +127,18 @@ def GameLoop(screen,fpsSet):
         elif Str == "quit":
             exit()
         elif Str == "keydown":
-            worm.event(event,True)
+            Snake.event(event,True)
         elif Str == "mouse":
-            worm.event(event,False)
+            Snake.event(event,False)
         elif Str == "resize":
             size = event.dict['size']
             Settings.setWindowSize(size)
             screen = pygame.display.set_mode(size,pygame.RESIZABLE| pygame.HWSURFACE|pygame.DOUBLEBUF)
             Settings.setSurface(screen)
-            worm.set_surface(screen)
+            Snake.set_surface(screen)
             food.set_surface(screen)
             food.redraw()
-            worm.redraw()
+            Snake.redraw()
             Settings.obsDraw(screen)
 
         pygame.display.update()
@@ -151,7 +151,7 @@ while True:
     global clock
     clock = pygame.time.Clock()
 
-    pygame.display.set_caption('Worm') ## set window title
+    pygame.display.set_caption('Snake') ## set window title
     pygame.display.set_mode(Settings.getSurface().get_size(),pygame.RESIZABLE| pygame.HWSURFACE|pygame.DOUBLEBUF)
     ## Menu function creates specific Menu
     tmpDict = Menu(screen,Settings.getBestScore(),Settings.score)

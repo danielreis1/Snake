@@ -9,14 +9,14 @@ class Settings:
         self.surface = surface
         self.backgroundColor = black # may be needed in case of transparency
         #GameSpecific
-        self.wormSize = 5 ## worm rectangles size (worm is made up of rectangles)
+        self.SnakeSize = 5 ## Snake rectangles size (Snake is made up of rectangles)
         self.foodRadius = 3
         self.score = 0
         self.bestScore = 0 ## placeholder value
         self.obsList = [] ##stores obstacles
         self.textSurfaceDict = {} # dictionary keys are "commands" for event
         self.numberObs = 3
-        self.collision = True #sets if worm collides with outter Walls
+        self.collision = True #sets if Snake collides with outter Walls
 
 
     def getCollision(self):
@@ -139,11 +139,11 @@ class Settings:
     def getFoodRadius(self):
         return self.foodRadius
 
-    def setWormSize(self, size):
-        self.wormSize = size
+    def setSnakeSize(self, size):
+        self.SnakeSize = size
 
-    def getWormSize(self):
-        return self.wormSize
+    def getSnakeSize(self):
+        return self.SnakeSize
 
     def getBestScore(self):
         #returns int

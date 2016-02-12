@@ -3,13 +3,13 @@ import pygame
 import random
 from Utils import *
 
-class Worm():
- def __init__(self, surface, wormSize):
+class Snake():
+ def __init__(self, surface, SnakeSize):
   self.surface = surface
   ## starts in the middle
   self.x = surface.get_width() / 2
   self.y = surface.get_height() / 2
-  self.size = wormSize ## worm size in pixels "set worm square size"
+  self.size = SnakeSize ## Snake size in pixels "set Snake square size"
   self.length = 1
   self.grow_to = 20
   ## "velocity x and y"
@@ -100,7 +100,7 @@ class Worm():
 
  def move(self):
   #can also be done with vectors
-  ## Move the worm pos + "velocity"
+  ## Move the Snake pos + "velocity"
   if self.vx >0 :
    self.x += self.vx + self.size
   elif self.vx <0 :
@@ -116,7 +116,7 @@ class Worm():
 
   self.body.insert(0, (self.x, self.y)) ## inserts item in list at given position (0)
 
-  if (self.grow_to > self.length): ## initially the worm "grows" to 50 size units (rectangles)
+  if (self.grow_to > self.length): ## initially the Snake "grows" to 50 size units (rectangles)
    self.length += 1
 
   if len(self.body) > self.length: ## pops out of the list the erased snake pieces by draw
