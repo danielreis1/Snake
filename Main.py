@@ -17,7 +17,7 @@ size = (500,500)
 screen = pygame.display.set_mode(size,pygame.RESIZABLE| pygame.HWSURFACE|pygame.DOUBLEBUF)
 Settings = Settings(screen)
 Settings.init()
-
+playSong("REBECCA.mp3",True) # song starts after initial configurations
 
 def generateObstacles(num):
     # generates num number of obstacles with random Size and at a random Space
@@ -33,27 +33,14 @@ def generateObstacles(num):
         Settings.obsList.insert(0,obs)
 
 
-def Menu(backgroundSurface):
-    # sets starting game messages
-    textSize = 12
-    bestScore = "Best Score: " + str(Settings.getBestScore())
-    scoreDisplay = "score:  " + str(score)
-    msgSurface(bestScore, textSize, white, black, red, -100, 200,backgroundSurface)
-    msgSurface(scoreDisplay, textSize, white,black, red, -100, 100,backgroundSurface)
-    msgSurface("Start? Press key ", textSize, white, black,red, 100,0,backgroundSurface)
-    msgSurface("Worm", textSize, white,black,red,0,0,backgroundSurface)
-    tmpSurface, surfaceCoords = msgSurface("Settings", textSize, red,black, black, 50, 50,backgroundSurface)
-    return (tmpSurface, surfaceCoords)
-
-##Game Loop
+## Game Loop
+# Wom Game Core
 def GameLoop(screen,fpsSet):
     ## returns score
     ## screen size
     score = 0
-    ##pygame.mixer.init() ##sound
-    ##chomp = pygame.mixer.Sound("chomp.wav") ##music
     # sets worm and food size in constructor to be able to change it in Settings
-    running = True
+    running = True # game running flag
     generateObstacles(Settings.numberObs) ## Settings class keeps obstacle number
     Settings.obsDraw(screen)
     pygame.display.update()
@@ -61,7 +48,6 @@ def GameLoop(screen,fpsSet):
     wormSize = Settings.getWormSize()
     food = Food(screen,foodRadius)
     worm = Worm(screen,wormSize)
-
 
     # sets worm starting velocity
     event,screen,Str = block(screen) # blocks before game starts
@@ -97,13 +83,13 @@ def GameLoop(screen,fpsSet):
         while True:
             coords = food.foodCoords()
             if not(coords in worm.getBody()):
-                if checkObstacle(coords, Settings):
+                if checkObstacle(coords, Settings.obsList):
                     food.draw()
                     break;
 
         ## use screen.get_width and .get_height methods in case you need to resize
 
-        running = checkObstacle(worm.getPos(),Settings) ## check if worm hit any obstacle
+        running = checkObstacle(worm.getPos(),Settings.obsList) ## check if worm hit any obstacle
 
 
         if worm.checkInvalidMove():
@@ -157,47 +143,46 @@ def GameLoop(screen,fpsSet):
         clock.tick(fpsSet) ## fps set
     return score
 
+
 ##set-up loop
 while True:
- ##running = True
-    ## global vars
-    global clock, food, worm
+    global clock
     clock = pygame.time.Clock()
 
-    ## screenflag used to only set screen once, screensize unchanged after fist iteration
     pygame.display.set_caption('Worm') ## set window title
     pygame.display.set_mode(Settings.getSurface().get_size(),pygame.RESIZABLE| pygame.HWSURFACE|pygame.DOUBLEBUF)
-    tmpSurface ,surfaceCoords = Menu(screen) # sets screen in Settings
-
+    ## Menu function creates specific Menu
+    tmpDict = Menu(screen,Settings.getBestScore(),Settings.score)
+    tmpSurface ,surfaceCoords = tmpDict["init"]
     while True:
         pygame.display.update()
         event, screen, Str = block(screen)
         if Str == "quit":
             exit()
         elif Str == "mouse":
-            Settings.event(tmpSurface,"init",event,surfaceCoords)
+            if hitCoords(event,tmpSurface,surfaceCoords):
+                Settings.event(tmpSurface,"init")
             screen.fill(black)
             pygame.display.set_mode(Settings.getSurface().get_size(), pygame.RESIZABLE| pygame.HWSURFACE|pygame.DOUBLEBUF)
-            tmpSurface ,surfaceCoords = Menu(screen)
+            tmpDict = Menu(screen,Settings.getBestScore(),Settings.score)
+            tmpSurface ,surfaceCoords = tmpDict["init"]
             continue
         elif Str == "keydown":
             break;
         elif Str == "resize":
             # possible solution -> store image in memory and load it after(use surface's transform method)
             screen = Settings.getSurface()
-            pygame.image.save(screen, "snake.png") # saves image as .png
             size = event.dict['size'] ## get window size
-            screen = pygame.display.set_mode(size, screen.get_flags())
-            Settings.setSurface(screen)
-            tempSurface = pygame.image.load("snake.png") # set background image
-            screen.blit(pygame.transform.scale(tempSurface,size),(0,0))
+            loadAndResize(screen, size, "snake.png")
 
     fpsSet = Settings.getSpeed()
     screen.fill(black)
     Settings.update()
     score = GameLoop(screen,fpsSet)
     Settings.saveScore(score)
-
     # make a music play
-    # make option background rectangle blink red when u press a settings option
-    # fix Menu function sending returned elements to Settings     # make Settings dict
+    # made option background rectangle blink when u press a settings option
+    # fixed Menu function sending returned elements to Settings
+    # made Settings dict
+    # fixed Settings event
+    # decoupled eventCoords from event

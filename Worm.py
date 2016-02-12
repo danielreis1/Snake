@@ -39,7 +39,7 @@ class Worm:
   self.surface = surface
 
  def eat(self):
-  self.grow_to += 5
+  self.grow_to += 10
 
  def getBody(self):
   return self.body
