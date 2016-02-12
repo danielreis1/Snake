@@ -4,7 +4,8 @@ import sys
 from Utils import *
 
 class Obstacle():
-    #pos and size are tuples
+    # pos and size are tuples
+    # try using sprites (extend from sprite class)
     def __init__(self,color,centerPos,size,backgroundColor):
         self.color = color
         self.size = size
