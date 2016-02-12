@@ -3,8 +3,9 @@ import pygame
 import random
 from Utils import *
 
-class Worm:
+class Worm(pygame.sprite.Sprite):
  def __init__(self, surface, wormSize):
+  pygame.sprite.Sprite.__init__(self)
   self.surface = surface
   ## starts in the middle
   self.x = surface.get_width() / 2

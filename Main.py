@@ -17,10 +17,12 @@ size = (500,500)
 screen = pygame.display.set_mode(size,pygame.RESIZABLE| pygame.HWSURFACE|pygame.DOUBLEBUF)
 Settings = Settings(screen)
 Settings.init()
-playSong("REBECCA.mp3",True) # song starts after initial configurations
+playSong("REBECCA.mp3") # song starts after initial configurations
 
-def generateObstacles(num):
+
+def generateObstacles(num,screen):
     # generates num number of obstacles with random Size and at a random Space
+    lista = []
     for i in range(num):
         randomX = int(random.randrange(50, screen.get_width()-50))
         randomY = int(random.randrange(50,screen.get_height() -50))
@@ -29,9 +31,9 @@ def generateObstacles(num):
 
         pos = (randomX,randomY)
         size = (randomSizeX,randomSizeY)
-        obs = Obstacle(white,pos,size,Settings.backgroundColor)
-        Settings.obsList.insert(0,obs)
-
+        obs = Obstacle(white,pos,size,black) # can pass args from Settings
+        lista.insert(0,obs)
+    return lista
 
 ## Game Loop
 # Wom Game Core
@@ -41,7 +43,7 @@ def GameLoop(screen,fpsSet):
     score = 0
     # sets worm and food size in constructor to be able to change it in Settings
     running = True # game running flag
-    generateObstacles(Settings.numberObs) ## Settings class keeps obstacle number
+    Settings.obsList += generateObstacles(Settings.numberObs, screen) ## Settings class keeps obstacle number
     Settings.obsDraw(screen)
     pygame.display.update()
     foodRadius = Settings.getFoodRadius()

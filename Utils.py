@@ -14,12 +14,13 @@ cyan = (0,255,255)
 purple = (255,0,255)
 
 
-def playSong(path,boolean):
+
+
+def playSong(path):
     # check sound Object in pygame documentation (different) from pygame.mixer.music
     pygame.mixer.music.load(path)
     # following line sends out USEREVENT every time song finishes
-    if boolean == True:
-        pygame.mixer.music.set_endevent(pygame.USEREVENT)
+    pygame.mixer.music.set_endevent(pygame.USEREVENT)
     # userevent resolved directly in event() function in this specific example
     # you may set in Settings your next song in a specific playlist
     pygame.mixer.music.play()
@@ -132,7 +133,7 @@ def block(screen): #decoupled block function
                 return (event,screen,"mouse")
             elif event.type == pygame.USEREVENT:
                 # event sent by music in Worm game
-                playSong("REBECCA.mp3",False)
+                playSong("REBECCA.mp3")
 
 
 
@@ -149,7 +150,7 @@ def nonBlock(screen):
         elif event.type == pygame.MOUSEBUTTONDOWN:
             return (event,screen,"mouse")
         elif event.type == pygame.USEREVENT:
-            playSong("REBECCA.mp3",False)
+            playSong("REBECCA.mp3")
             #nonBlock(screen)
 
     return (None, screen,"none")
