@@ -1,4 +1,8 @@
 # Snake Game
+#Must know
+#1. http://www.pygame.org/docs/tut/newbieguide.html
+#2. http://www.pygame.org/docs/
+
 
 from Food import *
 from Snake import *
