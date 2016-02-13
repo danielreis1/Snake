@@ -3,6 +3,7 @@
 import pygame
 import random
 import sys
+import os
 
 white = (255,255,255)
 black = (0,0,0)
@@ -14,6 +15,25 @@ cyan = (0,255,255)
 purple = (255,0,255)
 
 
+def playlist(playlistFolderPath = "playlist/"):
+    # gets all files and folders in given folder into a list and returns it
+    lista = []
+    n = 0
+    # use os module to manipulate file system
+    for i in os.listdir(playlistFolderPath):
+        lista.append(i)
+    return lista
+
+def playPlaylist(playlistFolderPath = "playlist/"):
+    #play playlist on shuffle
+    SongList = playlist(playlistFolderPath)
+    listLen = len(SongList)
+    i = random.randint(0,listLen-1)
+    print("\n" +SongList[i])
+    pygame.mixer.music.load(playlistFolderPath + SongList[i]) # sets filename from "playlist" folder
+    pygame.mixer.music.set_endevent(pygame.USEREVENT) # sends ou event when song finishses
+    pygame.mixer.music.play()
+
 
 
 def playSong(path):
@@ -22,7 +42,7 @@ def playSong(path):
     # following line sends out USEREVENT every time song finishes
     pygame.mixer.music.set_endevent(pygame.USEREVENT)
     # userevent resolved directly in event() function in this specific example
-    # you may set in Settings your next song in a specific playlist
+    # also in this specific case the song plays forever remove set_endevent for the set song to play only once
     pygame.mixer.music.play()
 
 
@@ -30,7 +50,6 @@ def loadAndResize(screen,size,path):
     # loads and resizes an image to (size) specified by path arg
     pygame.image.save(screen, path) # saves image as .png
     screen = pygame.display.set_mode(size, screen.get_flags())
-    Settings.setSurface(screen)
     tempSurface = pygame.image.load(path) # set background image
     screen.blit(pygame.transform.scale(tempSurface,size),(0,0))
 
@@ -41,9 +60,9 @@ def Menu(backgroundSurface, bestScore,score):
     textSize = 12
     # Menu function message-specific arguments, like the following:
     ## get the arguments from Settings
+    size = backgroundSurface.get_size()
     bestScore = "Best Score: " + str(bestScore)
     scoreDisplay = "score:  " + str(score)
-
     msgSurface(bestScore, textSize, white, black, red, -100, 200,backgroundSurface)
     msgSurface(scoreDisplay, textSize, white,black, red, -100, 100,backgroundSurface)
     msgSurface("Start? Press key ", textSize, white, black,red, 100,0,backgroundSurface)
@@ -116,7 +135,7 @@ def checkObstacle(pos,obsList):
             return False
     return True
 
-def block(screen): #decoupled block function
+def block(): #decoupled block function
     # returns (event, screen, String)
     ## function blocks game waiting for events
     pygame.display.update() ## displays last screen while waits for event
@@ -124,33 +143,33 @@ def block(screen): #decoupled block function
     while (True):     ## loop to check when key was pressed
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                return (event, screen, "quit")
+                return (event, "quit")
             elif event.type == pygame.VIDEORESIZE:
-                return (event,screen,"resize")
+                return (event,"resize")
             elif event.type == pygame.KEYDOWN:
-                return (event,screen,"keydown")
+                return (event,"keydown")
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                return (event,screen,"mouse")
+                return (event,"mouse")
             elif event.type == pygame.USEREVENT:
                 # event sent by music in Snake game
-                playSong("REBECCA.mp3")
+                #playSong("REBECCA.mp3")
+                playPlaylist()
 
 
-
-def nonBlock(screen):
+def nonBlock():
     # returns (event, screen, String)
     ## function gets event
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            return (event, screen, "quit")
+            return (event, "quit")
         elif event.type == pygame.VIDEORESIZE:
-            return (event,screen,"resize")
+            return (event,"resize")
         elif event.type == pygame.KEYDOWN:
-            return (event,screen,"keydown")
+            return (event,"keydown")
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            return (event,screen,"mouse")
+            return (event,"mouse")
         elif event.type == pygame.USEREVENT:
-            playSong("REBECCA.mp3")
-            #nonBlock(screen)
-
-    return (None, screen,"none")
+            #playSong("REBECCA.mp3")
+            playPlaylist() # fix path
+            nonBlock()
+    return (None, "none")

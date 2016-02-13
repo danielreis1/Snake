@@ -49,11 +49,8 @@ class Settings:
         backgroundColor = black
         textSize = 12
         self.textSurfaceDict = {}
-
-        screen = pygame.display.set_mode(screenSize) ## set fixed  screen for settings
-        screen.fill(backgroundColor)
-
         #Message Surfaces draw a rectangle with text to display
+        screen = pygame.display.set_mode(screenSize)
         msgSurface("Use left mouse button to change settings", textSize,textcolor, backgroundColor,backgroundColor, -100,-100,screen)
         msgSurface("Press any Key to start", textSize,textcolor, backgroundColor,backgroundColor, 0, 0,screen)
 
@@ -77,7 +74,7 @@ class Settings:
 
                 elif event.type == pygame.KEYDOWN:
                     self.textSurfaceDict = {}
-                    return None
+                    return screen
 
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     dic = self.textSurfaceDict

@@ -17,8 +17,9 @@ size = (500,500)
 screen = pygame.display.set_mode(size,pygame.RESIZABLE| pygame.HWSURFACE|pygame.DOUBLEBUF)
 Settings = Settings(screen)
 Settings.init()
-playSong("REBECCA.mp3") # song starts after initial configurations
-
+pygame.mixer.init()
+#playSong("REBECCA.mp3") # song starts after initial configurations
+playPlaylist()
 
 def generateObstacles(num,screen):
     # generates num number of obstacles with random Size and at a random Space
@@ -28,7 +29,6 @@ def generateObstacles(num,screen):
         randomY = int(random.randrange(50,screen.get_height() -50))
         randomSizeX = int(random.randrange(20,100))
         randomSizeY = int(random.randrange(20,100))
-
         pos = (randomX,randomY)
         size = (randomSizeX,randomSizeY)
         obs = Obstacle(white,pos,size,black) # can pass args from Settings
@@ -52,7 +52,7 @@ def GameLoop(screen,fpsSet):
     snake = Snake(screen,SnakeSize)
 
     # sets Snake starting velocity
-    event,screen,Str = block(screen) # blocks before game starts
+    event,Str = block() # blocks before game starts
 
     if Str == "quit":
         exit()
@@ -63,14 +63,12 @@ def GameLoop(screen,fpsSet):
     elif Str == "keydown":
         snake.event(event,True)
         while (snake.getVelocity() == (0,0)):
-            event,screen,Str = block(screen)
+            event,Str = block()
             snake.event(event,True)
 
     elif Str == "resize":
         size = event.dict['size']
-        Settings.setWindowSize(size)
         screen = pygame.display.set_mode(size,pygame.RESIZABLE| pygame.HWSURFACE|pygame.DOUBLEBUF)
-        Settings.setSurface(screen)
         snake.set_surface(screen)
         food.set_surface(screen)
         food.redraw()
@@ -117,13 +115,11 @@ def GameLoop(screen,fpsSet):
         if food.check(snake.x, snake.y):
             score += 1
             snake.eat()
-            ##chomp.play() ## music
             food.erase()
 
-        event, screen, Str = nonBlock(screen)
-
+        event, Str = nonBlock()
         if Str == "none":
-            a = " "
+            a = None
         elif Str == "quit":
             exit()
         elif Str == "keydown":
@@ -132,7 +128,6 @@ def GameLoop(screen,fpsSet):
             snake.event(event,False)
         elif Str == "resize":
             size = event.dict['size']
-            Settings.setWindowSize(size)
             screen = pygame.display.set_mode(size,pygame.RESIZABLE| pygame.HWSURFACE|pygame.DOUBLEBUF)
             Settings.setSurface(screen)
             snake.set_surface(screen)
@@ -145,27 +140,26 @@ def GameLoop(screen,fpsSet):
         clock.tick(fpsSet) ## fps set
     return score
 
-
 ##set-up loop
 while True:
     global clock
     clock = pygame.time.Clock()
 
     pygame.display.set_caption('Snake') ## set window title
-    pygame.display.set_mode(Settings.getSurface().get_size(),pygame.RESIZABLE| pygame.HWSURFACE|pygame.DOUBLEBUF)
+    screen = pygame.display.set_mode(screen.get_size(),pygame.RESIZABLE| pygame.HWSURFACE|pygame.DOUBLEBUF)
     ## Menu function creates specific Menu
     tmpDict = Menu(screen,Settings.getBestScore(),Settings.score)
     tmpSurface ,surfaceCoords = tmpDict["init"]
     while True:
         pygame.display.update()
-        event, screen, Str = block(screen)
+        event, Str = block()
         if Str == "quit":
             exit()
         elif Str == "mouse":
             if hitCoords(event,tmpSurface,surfaceCoords):
                 Settings.event(tmpSurface,"init")
             screen.fill(black)
-            pygame.display.set_mode(Settings.getSurface().get_size(), pygame.RESIZABLE| pygame.HWSURFACE|pygame.DOUBLEBUF)
+            screen = pygame.display.set_mode(screen.get_size(), pygame.RESIZABLE| pygame.HWSURFACE|pygame.DOUBLEBUF)
             tmpDict = Menu(screen,Settings.getBestScore(),Settings.score)
             tmpSurface ,surfaceCoords = tmpDict["init"]
             continue
@@ -173,7 +167,6 @@ while True:
             break;
         elif Str == "resize":
             # possible solution -> store image in memory and load it after(use surface's transform method)
-            screen = Settings.getSurface()
             size = event.dict['size'] ## get window size
             loadAndResize(screen, size, "snake.png")
 
@@ -182,9 +175,10 @@ while True:
     Settings.update()
     score = GameLoop(screen,fpsSet)
     Settings.saveScore(score)
-    # make a music play
-    # made option background rectangle blink when u press a settings option
-    # fixed Menu function sending returned elements to Settings
-    # made Settings dict
-    # fixed Settings event
-    # decoupled eventCoords from event
+
+    # Sounds -> made playlist play for sounds pygame part
+    # bitmaps ->
+    # sprites -> make block game? use block class in snake blocks (different branch)
+    # controls -> done
+    # graphics -> done?
+    # animations -> done?
