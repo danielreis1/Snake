@@ -127,8 +127,7 @@ def GameLoop(screen,fpsSet):
         event, Str = nonBlock()
         if Str == "none":
             a = None
-        elif Str == "quit":
-            exit()
+a            exit()
         elif Str == "keydown":
             snake.event(event,True)
         elif Str == "mouse":
