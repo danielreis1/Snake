@@ -28,6 +28,8 @@ def playPlaylist(playlistFolderPath = "playlist/"):
     #play playlist on shuffle
     SongList = playlist(playlistFolderPath)
     listLen = len(SongList)
+    if listLen == 0:
+        return
     i = random.randint(0,listLen-1)
     print("\n" +SongList[i])
     pygame.mixer.music.load(playlistFolderPath + SongList[i]) # sets filename from "playlist" folder
@@ -50,7 +52,7 @@ def loadAndResize(screen,size,path):
     # loads and resizes an image to (size) specified by path arg
     pygame.image.save(screen, path) # saves image as .png
     screen = pygame.display.set_mode(size, screen.get_flags())
-    tempSurface = pygame.image.load(path) # set background image
+    tempSurface = pygame.image.load(path).convert() # set background image
     screen.blit(pygame.transform.scale(tempSurface,size),(0,0))
 
 def Menu(backgroundSurface, bestScore,score):
@@ -139,7 +141,6 @@ def block(): #decoupled block function
     # returns (event, screen, String)
     ## function blocks game waiting for events
     pygame.display.update() ## displays last screen while waits for event
-
     while (True):     ## loop to check when key was pressed
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -152,7 +153,7 @@ def block(): #decoupled block function
                 return (event,"mouse")
             elif event.type == pygame.USEREVENT:
                 # event sent by music in Snake game
-                #playSong("REBECCA.mp3")
+                # playSong("REBECCA.mp3")
                 playPlaylist()
 
 
@@ -169,7 +170,7 @@ def nonBlock():
         elif event.type == pygame.MOUSEBUTTONDOWN:
             return (event,"mouse")
         elif event.type == pygame.USEREVENT:
-            #playSong("REBECCA.mp3")
-            playPlaylist() # fix path
+            #playSong("REBECCA.mp3") # -> play same song forever
+            playPlaylist() #  -> play playlist on shuffle
             nonBlock()
     return (None, "none")
