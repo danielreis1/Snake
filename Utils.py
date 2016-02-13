@@ -141,7 +141,6 @@ def block(): #decoupled block function
     # returns (event, screen, String)
     ## function blocks game waiting for events
     pygame.display.update() ## displays last screen while waits for event
-
     while (True):     ## loop to check when key was pressed
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

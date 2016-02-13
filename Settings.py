@@ -81,27 +81,7 @@ class Settings:
                         screen.fill(black)
                         pygame.display.update()
                         return self.init()
-        """
-        while True:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    exit()
-
-                elif event.type == pygame.KEYDOWN:
-                    self.textSurfaceDict = {}
-                    return screen
-
-                elif event.type == pygame.MOUSEBUTTONDOWN:
-                    dic = self.textSurfaceDict
-                    for Str in dic:
-                        if hitCoords(event,dic[Str][0],dic[Str][1]):
-                            self.event(dic[Str][0], Str)
-                            #following lines make screen "blink"
-                            screen.fill(black)
-                            pygame.display.update()
-                            return self.init()
-                            """
-
+    
     def event (self,surface, Str):
         # widget code
         ## can also have starting size
