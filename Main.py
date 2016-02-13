@@ -2,7 +2,7 @@
 #Must know
 #1. http://www.pygame.org/docs/tut/newbieguide.html
 #2. http://www.pygame.org/docs/
-
+#3. create a folder named playlist
 
 from Food import *
 from Snake import *
@@ -24,6 +24,7 @@ Settings.init()
 pygame.mixer.init()
 #playSong("REBECCA.mp3") # song starts after initial configurations
 playPlaylist()
+
 
 def generateObstacles(num,screen):
     # generates num number of obstacles with random Size and at a random Space
@@ -47,6 +48,8 @@ def GameLoop(screen,fpsSet):
     score = 0
     # sets Snake and food size in constructor to be able to change it in Settings
     running = True # game running flag
+    size = screen.get_size()
+    screen = pygame.display.set_mode(size,pygame.RESIZABLE| pygame.HWSURFACE|pygame.DOUBLEBUF)
     Settings.obsList += generateObstacles(Settings.numberObs, screen) ## Settings class keeps obstacle number
     Settings.obsDraw(screen)
     pygame.display.update()

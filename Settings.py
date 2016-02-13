@@ -65,8 +65,23 @@ class Settings:
 
         bestScore = str(self.getBestScore())
         msgSurface("BestScore = " + bestScore, textSize,textcolor, backgroundColor,backgroundColor, 100, 0, screen)
-
-        pygame.display.update()
+        while True:
+            event,Str = block()
+            if Str == "quit":
+                exit()
+            elif Str == "keydown":
+                    self.textSurfaceDict = {}
+                    return
+            elif Str == "mouse":
+                dic = self.textSurfaceDict
+                for Str in dic:
+                    if hitCoords(event,dic[Str][0],dic[Str][1]):
+                        self.event(dic[Str][0], Str)
+                        #following lines make screen "blink"
+                        screen.fill(black)
+                        pygame.display.update()
+                        return self.init()
+        """
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -85,7 +100,7 @@ class Settings:
                             screen.fill(black)
                             pygame.display.update()
                             return self.init()
-
+                            """
 
     def event (self,surface, Str):
         # widget code
@@ -113,10 +128,6 @@ class Settings:
 
     def decreaseSpeed(self):
         self.speed -= 2
-
-    def setBackground(self,color):
-        ## returns surface
-        self.surface.fill(color)
 
     def setSurface(self,screen):
         self.surface = screen
