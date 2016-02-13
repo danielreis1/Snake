@@ -20,13 +20,18 @@ def playlist(playlistFolderPath = "playlist/"):
     lista = []
     n = 0
     # use os module to manipulate file system
-    for i in os.listdir(playlistFolderPath):
-        lista.append(i)
-    return lista
+    try:
+        for i in os.listdir(playlistFolderPath):
+            lista.append(i)
+        return lista
+    except FileNotFoundError as Error:
+        print ("create playlist folder to listen to your songs")
 
 def playPlaylist(playlistFolderPath = "playlist/"):
     #play playlist on shuffle
     SongList = playlist(playlistFolderPath)
+    if SongList == None: # no playlist folder
+        return
     listLen = len(SongList)
     if listLen == 0:
         return

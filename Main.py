@@ -184,8 +184,8 @@ while True:
     Settings.saveScore(score)
 
     # Sounds -> made playlist play for sounds pygame part
-    # bitmaps ->
-    # sprites -> make block game? use block class in snake blocks (different branch)
+    # bitmaps -> store image function
+    # sprites -> se block class in snake blocks (different branch)
     # controls -> done
     # graphics -> done?
     # animations -> done?
