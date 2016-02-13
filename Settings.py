@@ -81,7 +81,7 @@ class Settings:
                         screen.fill(black)
                         pygame.display.update()
                         return self.init()
-    
+
     def event (self,surface, Str):
         # widget code
         ## can also have starting size
