@@ -53,12 +53,15 @@ def playSong(path):
     pygame.mixer.music.play()
 
 
-def loadAndResize(screen,size,path):
+def loadAndResize(image,size,path,coords=(0,0)):
     # loads and resizes an image to (size) specified by path arg
-    pygame.image.save(screen, path) # saves image as .png
-    screen = pygame.display.set_mode(size, screen.get_flags())
+    # default values for background
+    pygame.image.save(image, path) # saves image as .png
+    screen = pygame.display.set_mode(size,pygame.RESIZABLE| pygame.HWSURFACE|pygame.DOUBLEBUF)
     tempSurface = pygame.image.load(path).convert() # set background image
-    screen.blit(pygame.transform.scale(tempSurface,size),(0,0))
+    screen.blit(pygame.transform.scale(tempSurface,size),coords)
+    pygame.display.update()
+    return tempSurface
 
 def Menu(backgroundSurface, bestScore,score):
     # sets starting game messages

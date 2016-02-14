@@ -102,7 +102,8 @@ def GameLoop(screen,fpsSet):
         if snake.checkInvalidMove():
             running = False
 
-        if Settings.getCollision():
+        snake.set_surface(screen)
+        if Settings.getCollision(): #returns True if snake is set to collide with walls
             snake.checkBoundaries()
             if snake.getCrashState():
                 running = False
@@ -110,13 +111,13 @@ def GameLoop(screen,fpsSet):
             x,y = snake.checkBoundaries()
             if snake.getCrashState():
                 snakeX,snakeY = snake.getPos()
-                if snakeX > screen.get_width():
+                if snakeX > snake.surface.get_width():
                     snake.x = 0
                 elif snakeX < 0:
-                    snake.x = screen.get_width()
+                    snake.x = snake.surface.get_width()
                 elif snakeY < 0:
-                    snake.y = screen.get_height()
-                elif snakeY > screen.get_height():
+                    snake.y = snake.surface.get_height()
+                elif snakeY > snake.surface.get_height():
                     snake.y = 0
 
         if food.check(snake.x, snake.y):
@@ -125,6 +126,9 @@ def GameLoop(screen,fpsSet):
             food.erase()
 
         event, Str = nonBlock()
+        if Str == "quit":
+            exit()
+
         if Str == "none":
             a = None
         elif Str == "keydown":
@@ -133,7 +137,7 @@ def GameLoop(screen,fpsSet):
             snake.event(event,False)
         elif Str == "resize":
             size = event.dict['size']
-            screen = pygame.display.set_mode(size,pygame.RESIZABLE| pygame.HWSURFACE|pygame.DOUBLEBUF)
+            screen = pygame.display.set_mode(size,screen.get_flags())
             Settings.setSurface(screen)
             snake.set_surface(screen)
             food.set_surface(screen)
@@ -142,7 +146,7 @@ def GameLoop(screen,fpsSet):
             Settings.obsDraw(screen)
 
         pygame.display.update()
-        clock.tick(fpsSet) ## fps set
+        clock.tick(fpsSet) ## fps set -> must be set in every loop of the game loop
     return score
 
 ##set-up loop
@@ -171,9 +175,12 @@ while True:
         elif Str == "keydown":
             break;
         elif Str == "resize":
-            # possible solution -> store image in memory and load it after(use surface's transform method)
             size = event.dict['size'] ## get window size
-            loadAndResize(screen, size, "snake.png")
+            screen = pygame.display.set_mode(size,pygame.RESIZABLE| pygame.HWSURFACE|pygame.DOUBLEBUF)
+            # possible solution -> store image in memory and load it after(use surface's transform method)
+            # loadAndResize(screen, size, "snake.png")  -> used as a load image example in game loop
+            tmpDict = Menu(screen,Settings.getBestScore(),Settings.score)
+            tmpSurface ,surfaceCoords = tmpDict["init"]
 
     fpsSet = Settings.getSpeed()
     screen.fill(black)
