@@ -5,6 +5,7 @@ class Settings:
     def __init__(self,surface):
         #default values
         # make dict that stores all images for event {"init" , (surface,surfaceCoords)} use in Menu function
+        self.surfaceSize = None
         self.speed = 50 ##fps
         self.surface = surface
         self.backgroundColor = black # may be needed in case of transparency

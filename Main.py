@@ -48,7 +48,7 @@ def GameLoop(screen,fpsSet):
     score = 0
     # sets Snake and food size in constructor to be able to change it in Settings
     running = True # game running flag
-    size = screen.get_size()
+    size = Settings.surfaceSize
     screen = pygame.display.set_mode(size,pygame.RESIZABLE| pygame.HWSURFACE|pygame.DOUBLEBUF)
     Settings.obsList += generateObstacles(Settings.numberObs, screen) ## Settings class keeps obstacle number
     Settings.obsDraw(screen)
@@ -75,6 +75,7 @@ def GameLoop(screen,fpsSet):
 
     elif Str == "resize":
         size = event.dict['size']
+        Settings.surfaceSize = size
         screen = pygame.display.set_mode(size,pygame.RESIZABLE| pygame.HWSURFACE|pygame.DOUBLEBUF)
         snake.set_surface(screen)
         food.set_surface(screen)
@@ -137,6 +138,7 @@ def GameLoop(screen,fpsSet):
             snake.event(event,False)
         elif Str == "resize":
             size = event.dict['size']
+            Settings.surfaceSize = size
             screen = pygame.display.set_mode(size,screen.get_flags())
             Settings.setSurface(screen)
             snake.set_surface(screen)
@@ -156,6 +158,8 @@ while True:
 
     pygame.display.set_caption('Snake') ## set window title
     screen = pygame.display.set_mode(screen.get_size(),pygame.RESIZABLE| pygame.HWSURFACE|pygame.DOUBLEBUF)
+    Settings.surfaceSize = size
+
     ## Menu function creates specific Menu
     tmpDict = Menu(screen,Settings.getBestScore(),Settings.score)
     tmpSurface ,surfaceCoords = tmpDict["init"]
@@ -167,18 +171,22 @@ while True:
         elif Str == "mouse":
             if hitCoords(event,tmpSurface,surfaceCoords):
                 Settings.event(tmpSurface,"init")
+            size =  Settings.surfaceSize
             screen.fill(black)
-            screen = pygame.display.set_mode(screen.get_size(), pygame.RESIZABLE| pygame.HWSURFACE|pygame.DOUBLEBUF)
+            screen = pygame.display.set_mode(size, pygame.RESIZABLE| pygame.HWSURFACE|pygame.DOUBLEBUF)
             tmpDict = Menu(screen,Settings.getBestScore(),Settings.score)
+            # Menu returns dictionary with info on surfaces present
             tmpSurface ,surfaceCoords = tmpDict["init"]
             continue
         elif Str == "keydown":
             break;
         elif Str == "resize":
             size = event.dict['size'] ## get window size
+            Settings.surfaceSize =size
             screen = pygame.display.set_mode(size,pygame.RESIZABLE| pygame.HWSURFACE|pygame.DOUBLEBUF)
             # possible solution -> store image in memory and load it after(use surface's transform method)
-            # loadAndResize(screen, size, "snake.png")  -> used as a load image example in game loop
+            screen.fill(black)
+            # loadAndResize(screen,screen, size, "snake.png") #  -> used as a load image example
             tmpDict = Menu(screen,Settings.getBestScore(),Settings.score)
             tmpSurface ,surfaceCoords = tmpDict["init"]
 
@@ -194,3 +202,4 @@ while True:
     # controls -> done
     # graphics -> done?
     # animations -> done?
+    # finish comments

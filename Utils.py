@@ -16,7 +16,8 @@ purple = (255,0,255)
 
 
 def playlist(playlistFolderPath = "playlist/"):
-    # gets all files and folders in given folder into a list and returns it
+    """ gets all files and folders in given folder into a list and returns it
+    """
     lista = []
     n = 0
     # use os module to manipulate file system
@@ -28,6 +29,8 @@ def playlist(playlistFolderPath = "playlist/"):
         print ("create playlist folder to listen to your songs")
 
 def playPlaylist(playlistFolderPath = "playlist/"):
+    """ plays songs in a folder in random order
+    """
     #play playlist on shuffle
     SongList = playlist(playlistFolderPath)
     if SongList == None: # no playlist folder
@@ -44,7 +47,8 @@ def playPlaylist(playlistFolderPath = "playlist/"):
 
 
 def playSong(path):
-    # check sound Object in pygame documentation (different) from pygame.mixer.music
+    """ play a song specified by path, sends out pygame.USEREVENT when song ends"""
+
     pygame.mixer.music.load(path)
     # following line sends out USEREVENT every time song finishes
     pygame.mixer.music.set_endevent(pygame.USEREVENT)
@@ -53,17 +57,27 @@ def playSong(path):
     pygame.mixer.music.play()
 
 
-def loadAndResize(image,size,path,coords=(0,0)):
-    # loads and resizes an image to (size) specified by path arg
+def loadAndResize(screen,image,size,path,coords=(0,0)):
+    """ first argument = background, second arg image to resize, third image size,
+    path to image, fourth coords to blit image
+    returns loaded image surface
+    """
+    # loads and resizes an image to (size) specified by path argument
     # default values for background
     pygame.image.save(image, path) # saves image as .png
-    screen = pygame.display.set_mode(size,pygame.RESIZABLE| pygame.HWSURFACE|pygame.DOUBLEBUF)
+    #screen = pygame.display.set_mode(size,pygame.RESIZABLE| pygame.HWSURFACE|pygame.DOUBLEBUF)
     tempSurface = pygame.image.load(path).convert() # set background image
     screen.blit(pygame.transform.scale(tempSurface,size),coords)
-    pygame.display.update()
+    #pygame.display.update()
     return tempSurface
 
 def Menu(backgroundSurface, bestScore,score):
+    """
+    This function is an example for a specific Menu,
+    returns dictionary with keys: "command" -> [surface, surfaceCoords] for all
+    event bound text surfaces,
+    command is used in Settings event
+    """
     # sets starting game messages
     # returns dictionary with widgets surface and surfaceCoords
     dictt = {}
@@ -73,6 +87,8 @@ def Menu(backgroundSurface, bestScore,score):
     size = backgroundSurface.get_size()
     bestScore = "Best Score: " + str(bestScore)
     scoreDisplay = "score:  " + str(score)
+    # u can set a portion of the screen instead of fixed sizes in msgSurface
+    # example: msgSurface(bestScore, textSize, white, black, red, screen.get_width()/5,screen.get_height()/5,backgroundSurface)
     msgSurface(bestScore, textSize, white, black, red, -100, 200,backgroundSurface)
     msgSurface(scoreDisplay, textSize, white,black, red, -100, 100,backgroundSurface)
     msgSurface("Start? Press key ", textSize, white, black,red, 100,0,backgroundSurface)
@@ -82,24 +98,22 @@ def Menu(backgroundSurface, bestScore,score):
     return dictt
 
 def hitCoords(event,surface,coords):
+    """
+    receives event to check mouse coordinates, surface to check,
+    and Surface center coordinates in backgroundSurface referential
+    returns true if user pressed on the given surface
+    """
     # good for settings widget boundaries
     if pygame.mouse.get_pressed()[0] == True:
         x,y = event.pos
         # following line gives us coordinates in the "rectangle referential", top-left = (0,0)
         surfaceX, surfaceY = surface.get_rect().center
         #print ("rectangle coordinates center: " + "("+ str(surfaceX) +") " + "(" + str(surfaceY) +")")
-        centerX , centerY = coords
+        centerX , centerY = coords # coords in backgroundSurface referential
         #print ("background coordinates surface center: " + "("+ str(centerY) +") " + "(" + str(centerX) +")")
         if  ((x > centerX - surfaceX) and (x< centerX + surfaceX) and (y>centerY - surfaceY)  and (y<centerY + surfaceY )):
             return True
     return False
-
-def drawBackground(backgroundPath):
-    # use to draw screen to background
-    screen = pygame.display.set_mode((backgroundPath.get_width(), backgroundPath.get_height()))
-    screen.blit(backgroundPath, [0,0])
-    pygame.display.flip()
-
 
 def exit():
     pygame.quit()
