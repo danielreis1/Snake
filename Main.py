@@ -170,6 +170,8 @@ while True:
             exit()
         elif Str == "mouse":
             if hitCoords(event,tmpSurface,surfaceCoords):
+                screen.fill(black)
+                pygame.display.update()
                 Settings.event(tmpSurface,"init")
             size =  Settings.surfaceSize
             screen.fill(black)
