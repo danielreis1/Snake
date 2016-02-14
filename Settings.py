@@ -136,16 +136,22 @@ class Settings:
 
     def getBestScore(self):
         #returns int
-        f = open ("Score.txt", "r")
-        for line in f:
-            num = int(line[0]) # doesn't read "\n"
-            if num > self.bestScore:
-                self.bestScore = int(line)
-        f.close()
-        return self.bestScore
+        try:
+            f = open ("Score.txt", "r")
+            for line in f:
+                num = int(line[0]) # doesn't read "\n"
+                if num > self.bestScore:
+                    self.bestScore = int(line)
+            f.close()
+            return self.bestScore
+        except FileNotFoundError as Error:
+            open("Score.txt", "w").close() # creates file
 
     def saveScore(self,score):
         # saves score to best score list
-        f = open ("Score.txt", "a")
-        f.write(str(score) + " \n")
-        f.close()
+        try:
+            f = open ("Score.txt", "a")
+            f.write(str(score) + " \n")
+            f.close()
+        except FileNotFoundError as Error:
+            open("Score.txt", "w").close() # creates file
