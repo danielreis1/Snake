@@ -27,7 +27,7 @@ pygame.mixer.init()
 playPlaylist()
 
 
-def generateObstacles(num,screen):
+def generateObstacles(num,screen,collision):
     # generates num number of obstacles with random Size and at a random Space
     lista = []
     for i in range(num):
@@ -39,6 +39,13 @@ def generateObstacles(num,screen):
         size = (randomSizeX,randomSizeY)
         obs = Obstacle(white,pos,size,black) # can pass args from Settings
         lista.insert(0,obs)
+    # make outter wall
+    """ if collision:
+        center = (int(screen.get_width()/2), int(screen.get_height()/2))
+        walls = Obstacle(black,center,screen.get_size(),black)
+        walls.rect = walls.surface.get_rect(center = walls.center, width = 10)
+        lista.insert(0,walls)
+        """
     return lista
 
 ## Game Loop
@@ -51,8 +58,9 @@ def GameLoop(screen,fpsSet):
     running = True # game running flag
     size = Settings.surfaceSize
     screen = pygame.display.set_mode(size,pygame.RESIZABLE| pygame.HWSURFACE|pygame.DOUBLEBUF)
-    Settings.obsList += generateObstacles(Settings.numberObs, screen) ## Settings class keeps obstacle number
-    Settings.obsDraw(screen)
+    Settings.surface = screen
+    Settings.obsList += generateObstacles(Settings.numberObs, screen, Settings.getCollision()) ## Settings class keeps obstacle number
+    Settings.obsDraw()
     pygame.display.update()
     foodRadius = Settings.getFoodRadius()
     SnakeSize = Settings.getSnakeSize()
@@ -87,7 +95,6 @@ def GameLoop(screen,fpsSet):
     while running:
         snake.move()
         snake.draw()
-
         # while loop allows for food to always be drawn in a single loop
         while True:
             coords = food.foodCoords()
@@ -97,41 +104,35 @@ def GameLoop(screen,fpsSet):
                     break;
 
         ## use screen.get_width and .get_height methods in case you need to resize
-
-        running = checkObstacle(snake.getPos(),Settings.obsList) ## check if Snake hit any obstacle
-
+        snake.set_surface(screen)
+        if not pygame.sprite.groupcollide(snake.sprites, Settings.obsSprites,False,False) == {}:
+            running = False
 
         if snake.checkInvalidMove():
             running = False
 
-        snake.set_surface(screen)
-        if Settings.getCollision(): #returns True if snake is set to collide with walls
-            snake.checkBoundaries()
-            if snake.getCrashState():
-                running = False
-        else:
-            x,y = snake.checkBoundaries()
-            if snake.getCrashState():
-                snakeX,snakeY = snake.getPos()
-                if snakeX > snake.surface.get_width():
-                    snake.x = 0
-                elif snakeX < 0:
-                    snake.x = snake.surface.get_width()
-                elif snakeY < 0:
-                    snake.y = snake.surface.get_height()
-                elif snakeY > snake.surface.get_height():
-                    snake.y = 0
+        if not Settings.getCollision():
+            snakeX,snakeY = snake.getPos()
+            if snakeX > snake.surface.get_width():
+                snake.x = 0
+            elif snakeX < 0:
+                snake.x = snake.surface.get_width()
+            elif snakeY < 0:
+                snake.y = snake.surface.get_height()
+            elif snakeY > snake.surface.get_height():
+                snake.y = 0
 
         if food.check(snake.x, snake.y):
             score += 1
             snake.eat()
-            food.erase()
+            food.erase() # can make food a sprite too
 
         event, Str = nonBlock()
         if Str == "quit":
             exit()
 
         if Str == "none":
+            #do nothing
             a = None
         elif Str == "keydown":
             snake.event(event,True)
@@ -145,7 +146,7 @@ def GameLoop(screen,fpsSet):
             snake.set_surface(screen)
             food.set_surface(screen)
             food.redraw()
-            snake.redraw()
+            snake.draw()
             Settings.obsDraw(screen)
 
         pygame.display.update()
@@ -207,4 +208,4 @@ while True:
     # controls -> done
     # graphics -> done?
     # animations -> done?
-    # finish comments
+    # finished comments

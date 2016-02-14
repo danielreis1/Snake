@@ -78,7 +78,7 @@ def Menu(backgroundSurface, bestScore,score):
     """
     This function is an example for a specific Menu,
     returns dictionary with keys: "command" -> [surface, surfaceCoords] for all
-    event bound text surfaces,
+    event bound text surfaces, this kind of return works great with Settings class
     command is used in Settings event
     """
     # sets starting game messages

@@ -4,7 +4,6 @@ from Utils import *
 class Settings:
     def __init__(self,surface):
         #default values
-        # make dict that stores all images for event {"init" , (surface,surfaceCoords)} use in Menu function
         self.surfaceSize = None
         self.speed = 50 ##fps
         self.surface = surface
@@ -15,10 +14,11 @@ class Settings:
         self.score = 0
         self.bestScore = 0 ## placeholder value
         self.obsList = [] ##stores obstacles
+        #dict that stores all images for event {"init" , (surface,surfaceCoords)} use in Menu function
         self.textSurfaceDict = {} # dictionary keys are "commands" for event
-        self.numberObs = 3
+        self.numberObs = 3 #-> max number obstacles
         self.collision = True #sets if Snake collides with outter Walls
-
+        self.obsSprites = pygame.sprite.Group()
 
     def getCollision(self):
         return self.collision
@@ -26,10 +26,12 @@ class Settings:
     def getObsList(self):
         return self.obsList
 
-    def obsDraw(self,a):
+    def obsDraw(self):
+        # includes outter walls
         screen = self.surface
-        for obs in self.obsList:
-            pygame.draw.rect(screen,obs.color,obs.rect)
+        for i in self.obsList:
+            self.obsSprites.add(i)
+        self.obsSprites.draw(screen)
 
 
     def update(self):
@@ -37,12 +39,11 @@ class Settings:
         self.obsList = []
         self.textSurfaceDict = {}
         self.score = 0
+        self.obsSprites.empty()
 
     def init(self):
-
         # Simple Settings example
         # Pre-set Settings screen size unresizable
-        #
         # init returns screen
         ## returns previous screen
         screenSize = (500,500)
