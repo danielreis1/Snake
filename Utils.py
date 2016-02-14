@@ -57,18 +57,21 @@ def playSong(path):
     pygame.mixer.music.play()
 
 
-def loadAndResize(screen,image,size,path,coords=(0,0)):
-    """ first argument = background, second arg image to resize, third image size,
-    path to image, fourth coords to blit image
+def loadAndResize(screen,image,size,path = "snake.png",coords=(0,0)):
+    """
+    first argument = background, second arg image to resize, third image size,
+    fourth path to image, last coords to blit image
     returns loaded image surface
     """
     # loads and resizes an image to (size) specified by path argument
     # default values for background
     pygame.image.save(image, path) # saves image as .png
-    #screen = pygame.display.set_mode(size,pygame.RESIZABLE| pygame.HWSURFACE|pygame.DOUBLEBUF)
-    tempSurface = pygame.image.load(path).convert() # set background image
+    print("saved")
+    screen = pygame.display.set_mode(size,pygame.RESIZABLE| pygame.HWSURFACE|pygame.DOUBLEBUF)
+    tempSurface = pygame.image.load(path).convert() # set image
     screen.blit(pygame.transform.scale(tempSurface,size),coords)
-    #pygame.display.update()
+    print("blited")
+    # pygame.display.update()
     return tempSurface
 
 def Menu(backgroundSurface, bestScore,score):
@@ -120,6 +123,10 @@ def exit():
     sys.exit()
 
 def makeTextObjs(text, font, tcolor,backgroundColor):
+    """
+    text , font ,text color and the background color and renders the text accordingly
+    returns tuple (surface, rectangle)
+    """
     ## auxiliary function to msgSurface
     ## return tuple, function used to output text boxes
     textSurface = font.render(text, True, tcolor,backgroundColor) ## render fonts
@@ -128,8 +135,13 @@ def makeTextObjs(text, font, tcolor,backgroundColor):
 
 
 def msgSurface(text,textSize,textColor,backgroundColor,outlineColor, verticalOffset, horizontaOffset,screen):
-    # returns textSurface and center of rectangle in the rectangle referential(top-left (0,0))
-    ## "pixel counting" starts top left corner
+    """
+    outlineColor for text outter window color,
+    vertical and horizontalOffset from original backgroundSurface center coordinates =(0,0) in background Surface
+    must receive "main surface" ->special displayed surface in the last argument
+    returns textSurface and center of rectangle in the rectangle referential(top-left (0,0))
+    """
+
     width, height = screen.get_size()
     # can also set text object's font in arguments
     ## sets fonts
@@ -145,8 +157,10 @@ def msgSurface(text,textSize,textColor,backgroundColor,outlineColor, verticalOff
 
 
 def checkObstacle(pos,obsList):
-    # receives position tuple
-    # returns False if position in obstacle
+    """
+    receives position tuple and obstacle List
+    returns False if position in obstacle
+    """
     for obstacle in obsList:
         x,y = pos
         obstacleX, obstacleY = obstacle.center # background referential center
@@ -160,8 +174,11 @@ def checkObstacle(pos,obsList):
     return True
 
 def block(): #decoupled block function
-    # returns (event, screen, String)
-    ## function blocks game waiting for events
+    """
+    function blocks game waiting for events
+    returns (event, String) -> string used to reference event
+    """
+
     pygame.display.update() ## displays last screen while waits for event
     while (True):     ## loop to check when key was pressed
         for event in pygame.event.get():
@@ -180,8 +197,12 @@ def block(): #decoupled block function
 
 
 def nonBlock():
-    # returns (event, screen, String)
-    ## function gets event
+    """
+    function doesn't block game waiting for events
+    returns (event, String) -> string used to reference event
+    returns (None, "none") in case of no event
+    """
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             return (event, "quit")

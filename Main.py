@@ -21,6 +21,7 @@ size = (500,500)
 screen = pygame.display.set_mode(size,pygame.RESIZABLE| pygame.HWSURFACE|pygame.DOUBLEBUF)
 Settings = Settings(screen)
 Settings.init()
+Settings.surfaceSize = size
 pygame.mixer.init()
 #playSong("REBECCA.mp3") # song starts after initial configurations
 playPlaylist()
@@ -157,8 +158,8 @@ while True:
     clock = pygame.time.Clock()
 
     pygame.display.set_caption('Snake') ## set window title
-    screen = pygame.display.set_mode(screen.get_size(),pygame.RESIZABLE| pygame.HWSURFACE|pygame.DOUBLEBUF)
-    Settings.surfaceSize = size
+    size = Settings.surfaceSize
+    screen = pygame.display.set_mode(size,pygame.RESIZABLE| pygame.HWSURFACE|pygame.DOUBLEBUF)
 
     ## Menu function creates specific Menu
     tmpDict = Menu(screen,Settings.getBestScore(),Settings.score)
@@ -185,12 +186,14 @@ while True:
         elif Str == "resize":
             size = event.dict['size'] ## get window size
             Settings.surfaceSize =size
-            screen = pygame.display.set_mode(size,pygame.RESIZABLE| pygame.HWSURFACE|pygame.DOUBLEBUF)
             # possible solution -> store image in memory and load it after(use surface's transform method)
-            screen.fill(black)
             # loadAndResize(screen,screen, size, "snake.png") #  -> used as a load image example
+            # the other solution is to redo menu
+            screen = pygame.display.set_mode(size,pygame.RESIZABLE| pygame.HWSURFACE|pygame.DOUBLEBUF)
+            screen.fill(black)
             tmpDict = Menu(screen,Settings.getBestScore(),Settings.score)
             tmpSurface ,surfaceCoords = tmpDict["init"]
+            pygame.display.update()
 
     fpsSet = Settings.getSpeed()
     screen.fill(black)
