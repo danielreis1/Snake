@@ -39,13 +39,7 @@ def generateObstacles(num,screen,collision):
         size = (randomSizeX,randomSizeY)
         obs = Obstacle(white,pos,size,black) # can pass args from Settings
         lista.insert(0,obs)
-    # make outter wall
-    """ if collision:
-        center = (int(screen.get_width()/2), int(screen.get_height()/2))
-        walls = Obstacle(black,center,screen.get_size(),black)
-        walls.rect = walls.surface.get_rect(center = walls.center, width = 10)
-        lista.insert(0,walls)
-        """
+        # can make collision with outter walls
     return lista
 
 ## Game Loop
@@ -59,7 +53,7 @@ def GameLoop(screen,fpsSet):
     size = Settings.surfaceSize
     screen = pygame.display.set_mode(size,pygame.RESIZABLE| pygame.HWSURFACE|pygame.DOUBLEBUF)
     Settings.surface = screen
-    Settings.obsList += generateObstacles(Settings.numberObs, screen, Settings.getCollision()) ## Settings class keeps obstacle number
+    Settings.obsList = generateObstacles(Settings.numberObs, screen, Settings.getCollision()) ## Settings class keeps obstacle number
     Settings.obsDraw()
     pygame.display.update()
     foodRadius = Settings.getFoodRadius()
@@ -111,16 +105,30 @@ def GameLoop(screen,fpsSet):
         if snake.checkInvalidMove():
             running = False
 
-        if not Settings.getCollision():
-            snakeX,snakeY = snake.getPos()
-            if snakeX > snake.surface.get_width():
+
+        coll  = not Settings.getCollision()
+        snakeX,snakeY = snake.getPos()
+        if snakeX > snake.surface.get_width():
+            if coll:
                 snake.x = 0
-            elif snakeX < 0:
-                snake.x = snake.surface.get_width()
-            elif snakeY < 0:
-                snake.y = snake.surface.get_height()
-            elif snakeY > snake.surface.get_height():
-                snake.y = 0
+            else:
+                running= False
+        elif snakeX < 0:
+                if coll:
+                    snake.x = snake.surface.get_width()
+                else:
+                    running= False
+        elif snakeY < 0:
+                if coll:
+                    snake.y = snake.surface.get_height()
+                else:
+                    running= False
+        elif snakeY > snake.surface.get_height():
+                if coll:
+                    snake.y = 0
+                else:
+                    running= False
+
 
         if food.check(snake.x, snake.y):
             score += 1
@@ -147,7 +155,7 @@ def GameLoop(screen,fpsSet):
             food.set_surface(screen)
             food.redraw()
             snake.draw()
-            Settings.obsDraw(screen)
+            Settings.obsDraw()
 
         pygame.display.update()
         clock.tick(fpsSet) ## fps set -> must be set in every loop of the game loop

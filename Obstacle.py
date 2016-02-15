@@ -26,9 +26,3 @@ class Obstacle(pygame.sprite.Sprite):
             return
         else:
             self.rect.move(vel)
-
-    """
-    def draw(self):
-        pygame.draw.rect(self.surface, white, self.rect)
-        print("size: "+ str(size[0]) + " "+ str(size[1]))
-    """

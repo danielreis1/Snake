@@ -1,8 +1,8 @@
 
-from pygame import *
+import pygame
 import random
 from Obstacle import *
-from Utils import *
+
 
 class Snake():
     def __init__(self, surface, SnakeSize):
@@ -120,8 +120,8 @@ class Snake():
         #create more Snake
         block = Obstacle(self.color,(self.x,self.y),(self.size,self.size),black)
 
-        self.surfaceBody.insert(1,block) ## inserts item in list at given position (0)
-        self.sprites.add(self.surfaceBody[1])
+        self.surfaceBody.insert(0,block) ## inserts item in list at given position (0)
+        self.sprites.add(self.surfaceBody[0])
 
         if (self.grow_to > self.length): ## initially the Snake "grows" to 50 size units (rectangles)
             self.length += 1
@@ -132,14 +132,24 @@ class Snake():
 
         ## snake eats itself
         sprite = self.surfaceBody[0] # takes head of snake
+        # removes 1st element so head doesnt collide with it
+        self.sprites.remove(self.surfaceBody[0])
         group = self.sprites
-        if pygame.sprite.spritecollideany(sprite,group):
+        if pygame.sprite.spritecollide(sprite,group,False):
             self.invalidMove = True
+
+        self.sprites.add(self.surfaceBody[0])
 
 
     def draw(self):
         # draws next pixel erases last
+        #creates a surface with the background color
+        backgroundSurface = pygame.Surface(self.surface.get_size())
+        backgroundSurface.fill(black)
+        self.surfaceBody[-1].kill()
+        self.sprites.clear(self.surface,backgroundSurface)
         self.sprites.draw(self.surface) # calls obstacle class draw method
+
 
     def getCrashState(self):
         if self.crashed:
