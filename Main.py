@@ -200,11 +200,3 @@ while True:
     Settings.update()
     score = GameLoop(screen,fpsSet)
     Settings.saveScore(score)
-
-    # Sounds -> made playlist play for sounds pygame part
-    # bitmaps -> store image function
-    # sprites -> se block class in snake blocks (different branch)
-    # controls -> done
-    # graphics -> done?
-    # animations -> done?
-    # finish comments

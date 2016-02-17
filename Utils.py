@@ -94,7 +94,7 @@ def Menu(backgroundSurface, bestScore,score):
     # example: msgSurface(bestScore, textSize, white, black, red, screen.get_width()/5,screen.get_height()/5,backgroundSurface)
     msgSurface(bestScore, textSize, white, black, red, -100, 200,backgroundSurface)
     msgSurface(scoreDisplay, textSize, white,black, red, -100, 100,backgroundSurface)
-    msgSurface("Start? Press key ", textSize, white, black,red, 100,0,backgroundSurface)
+    msgSurface("Arrow keys to Starts | Left mouse button over Settings to change them", textSize, white, black,red, 100,0,backgroundSurface)
     msgSurface("Snake", textSize, white,black,red,0,0,backgroundSurface)
     tmpSurface, surfaceCoords = msgSurface("Settings", textSize, red,black, black, 50, 50,backgroundSurface)
     dictt["init"] = [tmpSurface,surfaceCoords]

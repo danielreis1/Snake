@@ -52,8 +52,8 @@ class Settings:
         self.textSurfaceDict = {}
         #Message Surfaces draw a rectangle with text to display
         screen = pygame.display.set_mode(screenSize)
-        msgSurface("Use left mouse button to change settings", textSize,textcolor, backgroundColor,backgroundColor, -100,-100,screen)
-        msgSurface("Press any Key to start", textSize,textcolor, backgroundColor,backgroundColor, 0, 0,screen)
+        msgSurface("Use left mouse button to change specific setting", textSize,textcolor, backgroundColor,backgroundColor, -100,-100,screen)
+        msgSurface("Press any arrow key to start", textSize,textcolor, backgroundColor,backgroundColor, 0, 0,screen)
 
         increaseSpeedSur, coordsIncSpeed = msgSurface("Speed +", textSize,textcolor, backgroundColor,backgroundColor, 150, 200,screen)
         self.textSurfaceDict["speed+"] = [increaseSpeedSur,coordsIncSpeed]
