@@ -114,14 +114,14 @@ class Snake():
             self.y += self.vy - self.size
 
         ## calls obstacle class update method
-        self.sprites.update((self.vx,self.vy)) # updates whole snake
-
+        #self.sprites.update((self.vx,self.vy)) # updates whole snake
+        # the previous line needs to be fixed update not working correctly
 
         #create more Snake
         block = Obstacle(self.color,(self.x,self.y),(self.size,self.size),black)
-
         self.surfaceBody.insert(0,block) ## inserts item in list at given position (0)
         self.sprites.add(self.surfaceBody[0])
+
 
         if (self.grow_to > self.length): ## initially the Snake "grows" to 50 size units (rectangles)
             self.length += 1
@@ -129,6 +129,7 @@ class Snake():
         if len(self.surfaceBody) > self.length:
             tmpS = self.surfaceBody.pop()
             self.sprites.remove(tmpS)
+
 
         ## snake eats itself
         sprite = self.surfaceBody[0] # takes head of snake

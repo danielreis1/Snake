@@ -28,6 +28,7 @@ def playlist(playlistFolderPath = "playlist/"):
     except FileNotFoundError as Error:
         print ("create playlist folder to listen to your songs")
 
+
 def playPlaylist(playlistFolderPath = "playlist/"):
     """ plays songs in a folder in random order
     """

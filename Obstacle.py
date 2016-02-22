@@ -19,10 +19,12 @@ class Obstacle(pygame.sprite.Sprite):
         self.rect = self.surface.get_rect(center = centerPos)
         self.surface.set_colorkey(self.backgroundColor) # pixels in obstacle with this color are transparent in the background
 
+        # update method not working correctly
+        # 
     def update(self,vel=(0,0)):
         # rectangle doesnt move by default
         # get snake
         if vel == (0,0):
             return
         else:
-            self.rect.move(vel)
+            self.rect = self.rect.move(vel)
